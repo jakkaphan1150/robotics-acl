@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="th" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Robotics 4-6 | Assumption College Lampang</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Prompt', sans-serif; }
+    html { scroll-behavior: smooth; }
+    body { background-color: #FFFFFF; }
+    
+    /* Animations */
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+    @keyframes slideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes pulse-soft { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+    @keyframes glow { 0%, 100% { box-shadow: 0 0 20px rgba(13, 71, 161, 0.3); } 50% { box-shadow: 0 0 30px rgba(13, 71, 161, 0.5); } }
+    
+    .fade-in-up { animation: fadeInUp 0.6s ease-out; }
+    .float-anim { animation: float 3s ease-in-out infinite; }
+    .slide-in-right { animation: slideInRight 0.7s ease-out; }
+    .pulse-soft { animation: pulse-soft 2s ease-in-out infinite; }
+    .glow-anim { animation: glow 2s ease-in-out infinite; }
+    
+    /* Card Hover */
+    .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(13, 71, 161, 0.12); }
+    
+    /* Section Divider */
+    .section-divider { height: 1px; background: linear-gradient(90deg, transparent, #E3E8EF, transparent); margin: 3rem 0; }
+    
+    /* Navbar */
+    .navbar-sticky { position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); }
+    
+    /* Accordions */
+    .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+    .accordion-content.active { max-height: 1000px; }
+    
+    /* Tech Icons */
+    .tech-icon { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 12px; background: #E3F2FD; }
+    
+    .grid-auto { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+
+    /* Badge */
+    .badge-acl { background: linear-gradient(135deg, #0D47A1 0%, #1565C0 100%); }
+  </style>
+</head>
+<body class="h-full overflow-auto">
+  
+  <!-- NAVBAR STICKY -->
+  <nav class="navbar-sticky">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-blue-900 to-blue-700 rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500 font-semibold">ACL</p>
+          <span class="font-bold text-lg text-blue-900">Robotics 4-6</span>
+        </div>
+      </div>
+      
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#home" class="text-sm font-medium text-gray-700 hover:text-blue-900 transition-colors">หน้าแรก</a>
+        <a href="#p4" class="text-sm font-medium text-gray-700 hover:text-blue-900 transition-colors">ป.4</a>
+        <a href="#p5" class="text-sm font-medium text-gray-700 hover:text-blue-900 transition-colors">ป.5</a>
+        <a href="#p6" class="text-sm font-medium text-gray-700 hover:text-blue-900 transition-colors">ป.6</a>
+        <a href="#news" class="text-sm font-medium text-gray-700 hover:text-blue-900 transition-colors">ข่าวสาร</a>
+        <a href="#contact" class="text-sm font-medium text-gray-700 hover:text-blue-900 transition-colors">ติดต่อ</a>
+      </div>
+      
+      <button id="mobileMenuBtn" class="md:hidden p-2 hover:bg-gray-100 rounded-lg">
+        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-gray-100">
+      <div class="px-4 py-3 space-y-2">
+        <a href="#home" class="block py-2 text-gray-700 hover:text-blue-900">หน้าแรก</a>
+        <a href="#p4" class="block py-2 text-gray-700 hover:text-blue-900">ป.4</a>
+        <a href="#p5" class="block py-2 text-gray-700 hover:text-blue-900">ป.5</a>
+        <a href="#p6" class="block py-2 text-gray-700 hover:text-blue-900">ป.6</a>
+        <a href="#news" class="block py-2 text-gray-700 hover:text-blue-900">ข่าวสาร</a>
+        <a href="#contact" class="block py-2 text-gray-700 hover:text-blue-900">ติดต่อ</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20" style="background: linear-gradient(135deg, #0D47A1 0%, #1565C0 50%, #42A5F5 100%);">
+    <!-- Decorative Elements -->
+    <div class="absolute inset-0 overflow-hidden">
+      <svg class="absolute top-20 left-10 w-40 h-40 text-white/10 float-anim" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-13h4v6h-4z"/>
+      </svg>
+      <svg class="absolute bottom-20 right-20 w-32 h-32 text-white/10 float-anim" style="animation-delay: 1s;" viewBox="0 0 24 24" fill="currentColor">
+        <circle cx="12" cy="8" r="3"/><rect x="9" y="12" width="6" height="8" rx="1"/>
+      </svg>
+      <div class="absolute top-40 right-40 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
+    </div>
+    
+    <div class="relative z-10 text-center px-4 max-w-4xl mx-auto fade-in-up">
+      <div class="mb-8 float-anim">
+        <svg class="w-24 h-24 mx-auto text-white" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-13h4v6h-4z"/>
+        </svg>
+      </div>
+      <div class="mb-6">
+        <h1 class="text-5xl md:text-7xl font-bold text-white mb-2 tracking-tight">Robotics 4-6</h1>
+        <p id="schoolName" class="text-2xl text-blue-100 font-light">Assumption College Lampang</p>
+      </div>
+      <p id="heroSubtitle" class="text-xl md:text-2xl text-blue-100 mb-10 font-light max-w-2xl mx-auto">พัฒนาทักษะการคิดเชิงวิศวกรรมและการเขียนโปรแกรมอย่างเป็นระบบ</p>
+      <button onclick="document.getElementById('p4').scrollIntoView({behavior:'smooth'})" class="inline-flex items-center gap-2 bg-white text-blue-900 px-8 py-4 rounded-full font-bold shadow-xl hover:shadow-2xl transition-all transform hover:scale-105 glow-anim">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+        เข้าสู่ห้องเรียน
+      </button>
+    </div>
+  </section>
+
+  <!-- GRADE LEVELS P.4 -->
+  <section id="p4" class="py-24 px-4 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16 fade-in-up">
+        <div class="inline-flex items-center gap-2 bg-blue-100 text-blue-900 px-4 py-2 rounded-full text-sm font-medium mb-4">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="3"/><rect x="9" y="12" width="6" height="8" rx="1"/></svg>
+          ระดับประถมศึกษาปีที่ 4
+        </div>
+        <h2 class="text-4xl md:text-5xl font-bold text-blue-900 mb-4">ชั้นประถมศึกษาปีที่ 4</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">เรียนรู้พื้นฐานการประกอบและเขียนโปรแกรมควบคุมหุ่นยนต์</p>
+      </div>
+      <div class="grid-auto">
+        <div class="card-hover bg-white rounded-2xl shadow-md p-6 border border-gray-100 cursor-pointer classroom-card" data-grade="4" data-class="1">
+          <div class="flex items-start justify-between mb-4">
+            <div class="tech-icon text-blue-600"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="3"/><rect x="9" y="12" width="6" height="8" rx="1"/></svg></div>
+            <span class="badge-acl text-white text-xs font-semibold px-3 py-1 rounded-full">ACL</span>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">ป.4/1</h3>
+          <p class="text-gray-500 text-sm mb-4">เรียนรู้พื้นฐานการประกอบและการเขียนโปรแกรม</p>
+          <button class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-medium transition-colors">เข้าสู่ห้องเรียน</button>
+        </div>
+        <div class="card-hover bg-white rounded-2xl shadow-md p-6 border border-gray-100 cursor-pointer classroom-card" data-grade="4" data-class="2">
+          <div class="flex items-start justify-between mb-4">
+            <div class="tech-icon text-blue-600"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="3"/><rect x="9" y="12" width="6" height="8" rx="1"/></svg></div>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">ป.4/2</h3>
+          <p class="text-gray-500 text-sm mb-4">เรียนรู้พื้นฐานการประกอบและการเขียนโปรแกรม</p>
+          <button class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-medium transition-colors">เข้าสู่ห้องเรียน</button>
+        </div>
+        <div class="card-hover bg-white rounded-2xl shadow-md p-6 border border-gray-100 cursor-pointer classroom-card" data-grade="4" data-class="3">
+          <div class="flex items-start justify-between mb-4">
+            <div class="tech-icon text-blue-600"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="3"/><rect x="9" y="12" width="6" height="8" rx="1"/></svg></div>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">ป.4/3</h3>
+          <p class="text-gray-500 text-sm mb-4">เรียนรู้พื้นฐานการประกอบและการเขียนโปรแกรม</p>
+          <button class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-medium transition-colors">เข้าสู่ห้องเรียน</button>
+        </div>
+        <div class="card-hover bg-white rounded-2xl shadow-md p-6 border border-gray-100 cursor-pointer classroom-card" data-grade="4" data-class="4">
+          <div class="flex items-start justify-between mb-4">
+            <div class="tech-icon text-blue-600"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="3"/><rect x="9" y="12" width="6" height="8" rx="1"/></svg></div>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">ป.4/4</h3>
+          <p class="text-gray-500 text-sm mb-4">เรียนรู้พื้นฐานการประกอบและการเขียนโปรแกรม</p>
+          <button class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-medium transition-colors">เข้าสู่ห้องเรียน</button>
+        </div>
+        <div class="card-hover bg-white rounded-2xl shadow-md p-6 border border-gray-100 cursor-pointer classroom-card" data-grade="4" data-class="5">
+          <div class="flex items-start justify-between mb-4">
+            <div class="tech-icon text-blue-600"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="3"/><rect x="9" y="12" width="6" height="8" rx="1"/></svg></div>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">ป.4/5</h3>
+          <p class="text-gray-500 text-sm mb-4">เรียนรู้พื้นฐานการประกอบและการเขียนโปรแกรม</p>
+          <button class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-medium transition-colors">เข้าสู่ห้องเรียน</button>
+        </div>
+        <div class="card-hover bg-white rounded-2xl shadow-md p-6 border border-gray-100 cursor-pointer classroom-card" data-grade="4" data-class="6">
+          <div class="flex items-start justify-between mb-4">
+            <div class="tech-icon text-blue-600"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="3"/><rect x="9" y="12" width="6" height="8" rx="1"/></svg></div>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">ป.4/6</h3>
+          <p class="text-gray-500 text-sm mb-4">เรียนรู้พื้นฐานการประกอบและการเขียนโปรแกรม</p>
+          <button class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-medium transition-colors">เข้าสู่ห้องเรียน</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider max-w-7xl mx-auto"></div>
+
+  <!-- GRADE LEVELS P.5 -->
+  <section id="p5" class="py-24 px-4 bg-blue-50">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16 fade-in-up">
+        <div class="inline-flex items-center gap-2 bg-indigo-100 text-indigo-900 px-4 py-2 rounded-full text-sm font-medium mb-4">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="6" r="3"/><rect x="8" y="10" width="8" height="8" rx="1"/></svg>
+          ระดับประถมศึกษาปีที่ 5
+        </div>
+        <h2 class="text-4xl md:text-5xl font-bold text-blue-900 mb-4">ชั้นประถมศึกษาปีที่ 5</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">ประยุกต์ใช้ Sensor และการควบคุมขั้นกลาง</p>
+      </div>
+      <div class="grid-auto">
+        <div class="card-hover bg-white rounded-2xl shadow-md p-6 border border-gray-100 cursor-pointer classroom-card" data-grade="5" data-class="1">
+          <div class="flex items-start justify-between mb-4">
+            <div class="tech-icon text-indigo-600"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="6" r="3"/><rect x="8" y="10" width="8" height="8" rx="1"/></svg></div>
+            <span class="badge-acl text-white text-xs font-semibold px-3 py-1 rounded-full">ACL</span>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">ป.5/1</h3>
+          <p class="text-gray-500 text-sm mb-4">ประยุกต์ใช้ Sensor และการควบคุมขั้นกลาง</p>
+          <button class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-medium transition-colors">เข้าสู่ห้องเรียน</button>
+        </div>
+        <div class="card-hover bg-white rounded-2xl shadow-md p-6 border border-gray-100 cursor-pointer classroom-card" data-grade="5" data-class="2">
+          <div class="flex items-start justify-between mb-4">
+            <div class="tech-icon text-indigo-600"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="6" r="3"/><rect x="8" y="10" width="8" height="8" rx="1"/></svg></div>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">ป.5/2</h3>
+          <p class="text-gray-500 text-sm mb-4">ประยุกต์ใช้ Sensor และการควบคุมขั้นกลาง</p>
+          <button class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-medium transition-colors">เข้าสู่ห้องเรียน</button>
+        </div>
+        <div class="card-hover bg-white rounded-2xl shadow-md p-6 border border-gray-100 cursor-pointer classroom-card" data-grade="5" data-class="3">
+          <div class="flex items-start justify-between mb-4">
+            <div class="tech-icon text-indigo-600"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="6" r="3"/><rect x="8" y="10" width="8" height="8" rx="1"/></svg></div>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">ป.5/3</h3>
+          <p class="text-gray-500 text-sm mb-4">ประยุกต์ใช้ Sensor และการควบคุมขั้นกลาง</p>
+          <button class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-medium transition-colors">เข้าสู่ห้องเรียน</button>
+        </div>
+        <div class="card-hover bg-white rounded-2xl shadow-md p-6 border border-gray-100 cursor-pointer classroom-card" data-grade="5" data-class="4">
+          <div class="flex items-start justify-between mb-4">
+            <div class="tech-icon text-indigo-600"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="6" r="3"/><rect x="8" y="10" width="8" height="8" rx="1"/></svg></div>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">ป.5/4</h3>
+          <p class="text-gray-500 text-sm mb-4">ประยุกต์ใช้ Sensor และการควบคุมขั้นกลาง</p>
+          <button class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-medium transition-colors">เข้าสู่ห้องเรียน</button>
+        </div>
+        <div class="card-hover bg-white rounded-2xl shadow-md p-6 border border-gray-100 cursor-pointer classroom-card" data-grade="5" data-class="5">
+          <div class="flex items-start justify-between mb-4">
+            <div class="tech-icon text-indigo-600"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="6" r="3"/><rect x="8" y="10" width="8" height="8" rx="1"/></svg></div>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">ป.5/5</h3>
+          <p class="text-gray-500 text-sm mb-4">ประยุกต์ใช้ Sensor และการควบคุมขั้นกลาง</p>
+          <button class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-medium transition-colors">เข้าสู่ห้องเรียน</button>
+        </div>
+        <div class="card-hover bg-white rounded-2xl shadow-md p-6 border border-gray-100 cursor-pointer classroom-card" data-grade="5" data-class="6">
+          <div class="flex items-start justify-between mb-4">
+            <div class="tech-icon text-indigo-600"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="6" r="3"/><rect x="8" y="10" width="8" height="8" rx="1"/></svg></div>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">ป.5/6</h3>
+          <p class="text-gray-500 text-sm mb-4">ประยุกต์ใช้ Sensor และการควบคุมขั้นกลาง</p>
+          <button class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-medium transition-colors">เข้าสู่ห้องเรียน</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider max-w-7xl mx-auto"></div>
+
+  <!-- GRADE LEVELS P.6 -->
+  <section id="p6" class="py-24 px-4 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16 fade-in-up">
+        <div class="inline-flex items-center gap-2 bg-purple-100 text-purple-900 px-4 py-2 rounded-full text-sm font-medium mb-4">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          ระดับประถมศึกษาปีที่ 6
+        </div>
+        <h2 class="text-4xl md:text-5xl font-bold text-blue-900 mb-4">ชั้นประถมศึกษาปีที่ 6</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">การออกแบบภารกิจและการแข่งขันหุ่นยนต์</p>
+      </div>
+      <div class="grid-auto">
+        <div class="card-hover bg-white rounded-2xl shadow-md p-6 border border-gray-100 cursor-pointer classroom-card" data-grade="6" data-class="1">
+          <div class="flex items-start justify-between mb-4">
+            <div class="tech-icon text-purple-600"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+            <span class="badge-acl text-white text-xs font-semibold px-3 py-1 rounded-full">ACL</span>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">ป.6/1</h3>
+          <p class="text-gray-500 text-sm mb-4">การออกแบบภารกิจและการแข่งขันหุ่นยนต์</p>
+          <button class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-medium transition-colors">เข้าสู่ห้องเรียน</button>
+        </div>
+        <div class="card-hover bg-white rounded-2xl shadow-md p-6 border border-gray-100 cursor-pointer classroom-card" data-grade="6" data-class="2">
+          <div class="flex items-start justify-between mb-4">
+            <div class="tech-icon text-purple-600"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">ป.6/2</h3>
+          <p class="text-gray-500 text-sm mb-4">การออกแบบภารกิจและการแข่งขันหุ่นยนต์</p>
+          <button class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-medium transition-colors">เข้าสู่ห้องเรียน</button>
+        </div>
+        <div class="card-hover bg-white rounded-2xl shadow-md p-6 border border-gray-100 cursor-pointer classroom-card" data-grade="6" data-class="3">
+          <div class="flex items-start justify-between mb-4">
+            <div class="tech-icon text-purple-600"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">ป.6/3</h3>
+          <p class="text-gray-500 text-sm mb-4">การออกแบบภารกิจและการแข่งขันหุ่นยนต์</p>
+          <button class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-medium transition-colors">เข้าสู่ห้องเรียน</button>
+        </div>
+        <div class="card-hover bg-white rounded-2xl shadow-md p-6 border border-gray-100 cursor-pointer classroom-card" data-grade="6" data-class="4">
+          <div class="flex items-start justify-between mb-4">
+            <div class="tech-icon text-purple-600"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">ป.6/4</h3>
+          <p class="text-gray-500 text-sm mb-4">การออกแบบภารกิจและการแข่งขันหุ่นยนต์</p>
+          <button class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-medium transition-colors">เข้าสู่ห้องเรียน</button>
+        </div>
+        <div class="card-hover bg-white rounded-2xl shadow-md p-6 border border-gray-100 cursor-pointer classroom-card" data-grade="6" data-class="5">
+          <div class="flex items-start justify-between mb-4">
+            <div class="tech-icon text-purple-600"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">ป.6/5</h3>
+          <p class="text-gray-500 text-sm mb-4">การออกแบบภารกิจและการแข่งขันหุ่นยนต์</p>
+          <button class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-medium transition-colors">เข้าสู่ห้องเรียน</button>
+        </div>
+        <div class="card-hover bg-white rounded-2xl shadow-md p-6 border border-gray-100 cursor-pointer classroom-card" data-grade="6" data-class="6">
+          <div class="flex items-start justify-between mb-4">
+            <div class="tech-icon text-purple-600"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">ป.6/6</h3>
+          <p class="text-gray-500 text-sm mb-4">การออกแบบภารกิจและการแข่งขันหุ่นยนต์</p>
+          <button class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-medium transition-colors">เข้าสู่ห้องเรียน</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLASSROOM DETAIL VIEW (HIDDEN BY DEFAULT) -->
+  <div id="classroomDetail" class="hidden fixed inset-0 z-40 bg-black/50 overflow-y-auto" style="display: none;">
+    <div class="min-h-screen flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl shadow-2xl w-full max-w-5xl p-8 md:p-12 relative max-h-screen overflow-y-auto">
+        <button onclick="closeClassroom()" class="absolute top-6 right-6 text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+
+        <div class="mb-8">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center text-white font-bold">
+              <span id="classTitle"></span>
+            </div>
+            <div>
+              <h1 id="classHeading" class="text-3xl font-bold text-blue-900"></h1>
+              <p class="text-gray-600">ห้องเรียนหุ่นยนต์ | ACL</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1. วัตถุประสงค์ -->
+        <div class="mb-8">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="tech-icon text-blue-600"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-13h4v6h-4z"/></svg></div>
+            <h2 class="text-2xl font-bold text-blue-900">วัตถุประสงค์</h2>
+          </div>
+          <div class="bg-blue-50 border border-blue-200 rounded-2xl p-6 space-y-3">
+            <div class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-13h4v6h-4z"/></svg>
+              <p class="text-gray-700">เข้าใจพื้นฐานการประกอบหุ่นยนต์และส่วนประกอบต่างๆ</p>
+            </div>
+            <div class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-13h4v6h-4z"/></svg>
+              <p class="text-gray-700">เขียนโปรแกรมควบคุมหุ่นยนต์พื้นฐาน</p>
+            </div>
+            <div class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-13h4v6h-4z"/></svg>
+              <p class="text-gray-700">พัฒนาทักษะการแก้ปัญหาเชิงวิศวกรรม</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 2. คำแนะนำ -->
+        <div class="mb-8">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="tech-icon text-amber-600"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg></div>
+            <h2 class="text-2xl font-bold text-blue-900">คำแนะนำ</h2>
+          </div>
+          <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6">
+            <p class="text-gray-700 leading-relaxed">
+              โปรดแน่ใจว่าได้อ่านคำแนะนำการใช้งานเบื้องต้นและติดตั้งซอฟต์แวร์ที่จำเป็นแล้ว ก่อนเริ่มบทเรียน โปรดเตรียมเครื่องมือและส่วนประกอบให้พร้อม และตรวจสอบความปลอดภัยของพื้นที่เรียน
+            </p>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 3. สถานการณ์ปัญหา -->
+        <div class="mb-8">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="tech-icon text-purple-600"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="3"/><rect x="9" y="12" width="6" height="8" rx="1"/></svg></div>
+            <h2 class="text-2xl font-bold text-blue-900">สถานการณ์ปัญหา</h2>
+          </div>
+          <div class="bg-purple-50 border-2 border-purple-300 rounded-2xl p-6">
+            <h3 class="text-lg font-bold text-purple-900 mb-3">Challenge: หุ่นยนต์ตามเส้น</h3>
+            <p class="text-gray-700 mb-4">
+              ให้ออกแบบและเขียนโปรแกรมหุ่นยนต์ให้สามารถตามเส้นสีดำบนพื้นสีขาวได้อย่างถูกต้อง โดยใช้ Sensor ตรวจสอบตำแหน่งเส้น
+            </p>
+            <div class="flex gap-2 flex-wrap">
+              <span class="bg-purple-200 text-purple-800 px-3 py-1 rounded-full text-sm">Sensor</span>
+              <span class="bg-purple-200 text-purple-800 px-3 py-1 rounded-full text-sm">Motor Control</span>
+              <span class="bg-purple-200 text-purple-800 px-3 py-1 rounded-full text-sm">Logic</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 4. ฐานความช่วยเหลือ -->
+        <div class="mb-8">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="tech-icon text-green-600"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3-8.5c0 .83-.67 1.5-1.5 1.5S12 13.33 12 12.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5z"/></svg></div>
+            <h2 class="text-2xl font-bold text-blue-900">ฐานความช่วยเหลือ</h2>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-green-50 border border-green-200 rounded-xl p-4 card-hover">
+              <h3 class="font-bold text-green-900 mb-2">📺 วิดีโอสาธิต</h3>
+              <p class="text-sm text-gray-600 mb-3">ชมวิดีโอการประกอบและการเขียนโปรแกรม</p>
+              <a href="#" target="_blank" class="text-green-600 hover:text-green-700 text-sm font-medium">ดูวิดีโอ →</a>
+            </div>
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 card-hover">
+              <h3 class="font-bold text-blue-900 mb-2">💾 ตัวอย่างโค้ด</h3>
+              <p class="text-sm text-gray-600 mb-3">ดาวน์โหลดตัวอย่างโค้ดสำหรับบทเรียน</p>
+              <a href="#" target="_blank" class="text-blue-600 hover:text-blue-700 text-sm font-medium">ดาวน์โหลด →</a>
+            </div>
+            <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 card-hover">
+              <h3 class="font-bold text-indigo-900 mb-2">📚 เอกสาร</h3>
+              <p class="text-sm text-gray-600 mb-3">เอกสารคำแนะนำเพิ่มเติม</p>
+              <a href="#" target="_blank" class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">อ่านเอกสาร →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 5. เนื้อหาบทเรียน -->
+        <div class="mb-8">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="tech-icon text-indigo-600"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div>
+            <h2 class="text-2xl font-bold text-blue-900">เนื้อหาบทเรียน</h2>
+          </div>
+          
+          <!-- Term 1 -->
+          <div class="mb-6">
+            <button onclick="toggleAccordion('term1')" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 rounded-xl font-bold flex items-center justify-between hover:shadow-lg transition-all">
+              <span>📅 เทอม 1</span>
+              <svg class="w-6 h-6 transition-transform" id="term1-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+            </button>
+            <div id="term1" class="accordion-content active mt-3 space-y-2">
+              <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 pl-8 ml-2 border-l-4">
+                <h3 class="font-bold text-blue-900">หน่วยที่ 1: พื้นฐานหุ่นยนต์</h3>
+                <p class="text-sm text-gray-600">เรียนรู้ส่วนประกอบและการประกอบพื้นฐาน</p>
+              </div>
+              <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 pl-8 ml-2 border-l-4">
+                <h3 class="font-bold text-blue-900">หน่วยที่ 2: การเขียนโปรแกรมพื้นฐาน</h3>
+                <p class="text-sm text-gray-600">บทนำเกี่ยวกับการเขียนโปรแกรมและตรรกะ</p>
+              </div>
+              <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 pl-8 ml-2 border-l-4">
+                <h3 class="font-bold text-blue-900">หน่วยที่ 3: ควบคุมมอเตอร์</h3>
+                <p class="text-sm text-gray-600">เรียนรู้การควบคุมมอเตอร์และการเคลื่อนที่</p>
+              </div>
+              <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 pl-8 ml-2 border-l-4">
+                <h3 class="font-bold text-blue-900">หน่วยที่ 4: โครงการทำปฏิบัติการ</h3>
+                <p class="text-sm text-gray-600">ทำปฏิบัติการประกอบและเขียนโปรแกรม</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Term 2 -->
+          <div>
+            <button onclick="toggleAccordion('term2')" class="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 text-white p-4 rounded-xl font-bold flex items-center justify-between hover:shadow-lg transition-all">
+              <span>📅 เทอม 2</span>
+              <svg class="w-6 h-6 transition-transform" id="term2-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+            </button>
+            <div id="term2" class="accordion-content mt-3 space-y-2">
+              <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 pl-8 ml-2 border-l-4">
+                <h3 class="font-bold text-indigo-900">หน่วยที่ 5: Sensor พื้นฐาน</h3>
+                <p class="text-sm text-gray-600">เรียนรู้การใช้ Sensor ต่างๆ</p>
+              </div>
+              <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 pl-8 ml-2 border-l-4">
+                <h3 class="font-bold text-indigo-900">หน่วยที่ 6: ระบบควบคุมอัตโนมัติ</h3>
+                <p class="text-sm text-gray-600">การใช้ Sensor ในการควบคุมหุ่นยนต์</p>
+              </div>
+              <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 pl-8 ml-2 border-l-4">
+                <h3 class="font-bold text-indigo-900">หน่วยที่ 7: โครงการขั้นสูง</h3>
+                <p class="text-sm text-gray-600">ออกแบบโครงการเฉพาะของตัวเอง</p>
+              </div>
+              <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 pl-8 ml-2 border-l-4">
+                <h3 class="font-bold text-indigo-900">หน่วยที่ 8: ความปลอดภัยและการดูแลรักษา</h3>
+                <p class="text-sm text-gray-600">ความปลอดภัยและการดูแลรักษาหุ่นยนต์</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 6. แหล่งเรียนรู้เพิ่มเติม -->
+        <div class="mb-8">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="tech-icon text-orange-600"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div>
+            <h2 class="text-2xl font-bold text-blue-900">แหล่งเรียนรู้เพิ่มเติม</h2>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <a href="#" target="_blank" class="group bg-orange-50 border border-orange-200 rounded-xl p-4 card-hover">
+              <h3 class="font-bold text-orange-900 mb-2">🎥 YouTube Channel</h3>
+              <p class="text-sm text-gray-600 group-hover:text-gray-700">ติดตามสอนการใช้งานเพิ่มเติม</p>
+            </a>
+            <a href="#" target="_blank" class="group bg-cyan-50 border border-cyan-200 rounded-xl p-4 card-hover">
+              <h3 class="font-bold text-cyan-900 mb-2">📱 Community Forum</h3>
+              <p class="text-sm text-gray-600 group-hover:text-gray-700">ถามปัญหาและแบ่งปลายการกับชุมชน</p>
+            </a>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 7. แบบทดสอบ -->
+        <div class="mb-8">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="tech-icon text-rose-600"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54-1.3-1.54c-.3-.36-.77-.36-1.07 0-.3.36-.3.96 0 1.32l1.98 2.36c.3.36.77.36 1.07 0l3.93-4.87c.3-.36.3-.96 0-1.32-.3-.36-.77-.36-1.07 0z"/></svg></div>
+            <h2 class="text-2xl font-bold text-blue-900">แบบทดสอบ</h2>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button class="bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white rounded-xl p-6 font-bold transition-all transform hover:scale-105">
+              <div class="text-3xl mb-2">📝</div>
+              <div>ทำแบบทดสอบก่อนเรียน</div>
+              <p class="text-sm text-rose-100 mt-2">ประเมินความรู้เบื้องต้น</p>
+            </button>
+            <button class="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white rounded-xl p-6 font-bold transition-all transform hover:scale-105">
+              <div class="text-3xl mb-2">✅</div>
+              <div>ทำแบบทดสอบหลังเรียน</div>
+              <p class="text-sm text-emerald-100 mt-2">ประเมินความเข้าใจ</p>
+            </button>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 8. ผู้จัดทำ -->
+        <div>
+          <div class="bg-gradient-to-r from-blue-900 to-blue-800 text-white rounded-2xl p-8">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center text-2xl">👨‍🏫</div>
+              <div>
+                <p class="text-blue-200 text-sm uppercase tracking-widest">ผู้จัดทำเนื้อหา</p>
+                <p id="creatorName" class="text-2xl font-bold">ม.จักรพันธุ์ จำปาศรี</p>
+              </div>
+            </div>
+            <p class="text-blue-100 leading-relaxed">
+              ผู้เชี่ยวชาญด้านการศึกษาวิทยาศาสตร์และเทคโนโลยี จัดทำหลักสูตรการสอนหุ่นยนต์สำหรับนักเรียนประถมศึกษา
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEWS SECTION -->
+  <section id="news" class="py-24 px-4 bg-blue-50">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16 fade-in-up">
+        <h2 class="text-4xl md:text-5xl font-bold text-blue-900 mb-4">ข่าวสารและอัพเดต</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">ติดตามข่าวสารและกิจกรรมล่าสุดของโปรแกรม Robotics</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="card-hover bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+          <div class="h-40 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+            <svg class="w-16 h-16 text-white/80" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <div class="p-6">
+            <p class="text-xs text-gray-500 mb-2">📅 15 มกราคม 2569</p>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">การแข่งขัน Robotics Championship 2569</h3>
+            <p class="text-gray-600 text-sm">ขอเชิญนักเรียนทุกระดับชั้นเข้าร่วมการแข่งขันหุ่นยนต์ประจำปี...</p>
+          </div>
+        </div>
+        <div class="card-hover bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+          <div class="h-40 bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center">
+            <svg class="w-16 h-16 text-white/80" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l11 6 9-4.91V17h2V9M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+          </div>
+          <div class="p-6">
+            <p class="text-xs text-gray-500 mb-2">📅 10 มกราคม 2569</p>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">Workshop: Advanced Sensor Programming</h3>
+            <p class="text-gray-600 text-sm">เปิดรับสมัครนักเรียน ป.5-6 เข้าร่วมอบรมการเขียนโปรแกรม Sensor...</p>
+          </div>
+        </div>
+        <div class="card-hover bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+          <div class="h-40 bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
+            <svg class="w-16 h-16 text-white/80" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="5"/><rect x="6" y="14" width="12" height="8" rx="2"/></svg>
+          </div>
+          <div class="p-6">
+            <p class="text-xs text-gray-500 mb-2">📅 5 มกราคม 2569</p>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">เปิดรับสมัครนักเรียนใหม่ ปีการศึกษา 2569</h3>
+            <p class="text-gray-600 text-sm">โปรแกรม Robotics เปิดรับสมัครนักเรียนใหม่ทุกระดับชั้น...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT SECTION -->
+  <section id="contact" class="py-24 px-4 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16 fade-in-up">
+        <h2 class="text-4xl md:text-5xl font-bold text-blue-900 mb-4">ติดต่อเราหรือได้รับข้อมูลเพิ่มเติม</h2>
+        <p class="text-gray-600">เพื่อการสอบถามหรือแบ่งปันข้อมูลประสบการณ์</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="card-hover bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8 border border-blue-200">
+          <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M20.01 15.99c-1.1 0-2.18-.45-2.96-1.23l-2.52-2.52c-.77-.77-1.23-1.86-1.23-2.96 0-1.1.45-2.18 1.23-2.96l2.52-2.52c.78-.78 1.86-1.23 2.96-1.23 1.1 0 2.18.45 2.96 1.23l2.52 2.52c.77.77 1.23 1.86 1.23 2.96 0 1.1-.45 2.18-1.23 2.96l-2.52 2.52c-.78.78-1.86 1.23-2.96 1.23z"/></svg>
+          </div>
+          <h3 class="text-xl font-bold text-blue-900 mb-2">โทรศัพท์</h3>
+          <p class="text-gray-700 font-medium">+66 (0) 2-XXX-XXXX</p>
+          <p class="text-gray-600 text-sm mt-1">ติดต่อได้ จันทร์-ศุกร์ 08:00-16:00 น.</p>
+        </div>
+        <div class="card-hover bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-2xl p-8 border border-indigo-200">
+          <div class="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          </div>
+          <h3 class="text-xl font-bold text-blue-900 mb-2">อีเมล</h3>
+          <p class="text-gray-700 font-medium">robotics@acl.ac.th</p>
+          <p class="text-gray-600 text-sm mt-1">ตอบกลับภายใน 24 ชั่วโมง</p>
+        </div>
+        <div class="card-hover bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-8 border border-green-200">
+          <div class="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 3.756-1.915 6.954-5.013 8.461l-.369.169-.369-.169c-3.098-1.507-5.013-4.705-5.013-8.461 0-.346.282-.631.63-.631h9.504zm-4.721 6.108l2.321-2.321-1.059-1.06-1.262 1.262-.566-.566-1.06 1.06 1.626 1.625z"/></svg>
+          </div>
+          <h3 class="text-xl font-bold text-blue-900 mb-2">Line</h3>
+          <p class="text-gray-700 font-medium">@robotics_acl</p>
+          <p class="text-gray-600 text-sm mt-1">ตอบสนองอย่างรวดเร็ว</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-blue-900 text-white py-8">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-13h4v6h-4z"/></svg>
+          <span class="font-semibold">Robotics 4-6 | Assumption College Lampang</span>
+        </div>
+        <p class="text-blue-300 text-sm">© 2569 Robotics Program | ACL</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const defaultConfig = {
+      school_name: 'Assumption College Lampang',
+      hero_subtitle: 'พัฒนาทักษะการคิดเชิงวิศวกรรมและการเขียนโปรแกรมอย่างเป็นระบบ',
+      creator_name: 'ม.จักรพันธุ์ จำปาศรี'
+    };
+
+    // Mobile menu
+    document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('hidden');
+    });
+
+    document.querySelectorAll('#mobileMenu a').forEach(link => {
+      link.addEventListener('click', () => document.getElementById('mobileMenu').classList.add('hidden'));
+    });
+
+    // Classroom detail
+    document.querySelectorAll('.classroom-card').forEach(card => {
+      card.addEventListener('click', () => showClassroom(card.dataset.grade, card.dataset.class));
+    });
+
+    function showClassroom(grade, classNum) {
+      const detail = document.getElementById('classroomDetail');
+      document.getElementById('classTitle').textContent = `ป.${grade}/${classNum}`;
+      document.getElementById('classHeading').textContent = `ชั้นประถมศึกษาปีที่ ${grade} ห้อง ${classNum}`;
+      document.getElementById('creatorName').textContent = window.elementSdk?.config?.creator_name || defaultConfig.creator_name;
+      detail.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeClassroom() {
+      document.getElementById('classroomDetail').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    function toggleAccordion(id) {
+      const content = document.getElementById(id);
+      const icon = document.getElementById(id + '-icon');
+      content.classList.toggle('active');
+      icon.style.transform = content.classList.contains('active') ? 'rotate(0deg)' : 'rotate(-90deg)';
+    }
+
+    // Element SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          document.getElementById('schoolName').textContent = config.school_name || defaultConfig.school_name;
+          document.getElementById('heroSubtitle').textContent = config.hero_subtitle || defaultConfig.hero_subtitle;
+          document.querySelectorAll('#creatorName').forEach(el => {
+            el.textContent = config.creator_name || defaultConfig.creator_name;
+          });
+        },
+        mapToCapabilities: () => ({ recolorables: [], borderables: [], fontEditable: undefined, fontSizeable: undefined }),
+        mapToEditPanelValues: (config) => new Map([
+          ['school_name', config.school_name || defaultConfig.school_name],
+          ['hero_subtitle', config.hero_subtitle || defaultConfig.hero_subtitle],
+          ['creator_name', config.creator_name || defaultConfig.creator_name]
+        ])
+      });
+    }
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cf23f19f041d03a',t:'MTc3MTI5OTQ1MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
